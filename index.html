@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ты кириешка</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #0a0a1a 0%, #1a237e 100%);
+        font-family: 'Inter', Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden;
+      }
+      .main-flex {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+      }
+      .container {
+        background: #23272f;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
+        padding: 40px 32px 32px 32px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+      }
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #f8f8ff;
+        letter-spacing: 1px;
+      }
+      p, .text {
+        color: #bfc7d5;
+        font-size: 1.1rem;
+        margin-bottom: 32px;
+        margin-top: 0;
+      }
+      .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      button {
+        background: linear-gradient(90deg, #232526 0%, #414345 100%);
+        color: #fff;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 28px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        outline: none;
+      }
+      button:hover {
+        background: linear-gradient(90deg, #414345 0%, #232526 100%);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        transform: translateY(-2px) scale(1.03);
+      }
+      button svg {
+        fill: #fff;
+        transition: fill 0.3s;
+      }
+      /* Card styles from Uiverse.io by htwarriors108 */
+      .card {
+        position: relative;
+        width: 190px;
+        height: 254px;
+        color: #fff;
+        transition: 0.5s;
+        cursor: pointer;
+      }
+      .card:hover {
+        transform: translateY(-20px);
+      }
+      .card::before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(45deg, #ffbc00, #ff0058);
+        border-radius: 1.2em;
+      }
+      .card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #ffbc00, #ff0058);
+        filter: blur(30px);
+      }
+      .card span {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        bottom: 6px;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 2;
+        border-radius: 1em;
+      }
+      .card span::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .card .content {
+        position: relative;
+        padding: 10px;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.5em;
+      }
+      @media (max-width: 900px) {
+        .main-flex {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+      .card-fixed-wrapper {
+        position: fixed;
+        top: 40px;
+        right: 40px;
+        z-index: 100;
+      }
+      @media (max-width: 900px) {
+        .card-fixed-wrapper {
+          position: static;
+          margin-top: 32px;
+          display: flex;
+          justify-content: center;
+        }
+      }
+      .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.5s;
+      }
+      .loader-overlay.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .loader {
+        --c: #f7971d;
+      }
+      .ph1 {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        animation: ph1 3s ease infinite;
+        clip-path: polygon(-4em -1em, 4em -1em, 4em 1em, -4em 1em);
+      }
+      .record {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 2em;
+        height: 2em;
+        background: var(--c);
+        border-radius: 999px;
+        animation: blink 1s step-end infinite;
+        transform: translate(-3.5em, -50%);
+      }
+      .record-text {
+        position: absolute;
+        color: var(--c);
+        font-size: 2.2em;
+        font-weight: 700;
+        left: 50%;
+        top: 50%;
+        transform: translate(-0.5em, -50%);
+        width: 2em;
+        height: 1.5em;
+      }
+      @keyframes blink {
+        50% { opacity: 0; }
+        75% { opacity: 1; }
+      }
+      @keyframes ph1 {
+        25.5% { translate: 0 0; clip-path: polygon(-4em -1em, 4em -1em, 4em 1em, -4em 1em); }
+        30%, to { opacity: 1; translate: 0 3em; clip-path: polygon(-4em 1em, 4em 1em, 4em 1em, -4em 1em); }
+        30.1% { opacity: 0; translate: 0 3em; }
+        92.4%, to { translate: 0 0; opacity: 0; clip-path: polygon(-4em -1em, 4em -1em, 4em 1em, -4em 1em); }
+        92.5% { opacity: 1; clip-path: polygon(-4em -1em, -0.5em -1em, -0.5em 1em, -4em 1em); }
+        to { opacity: 1; clip-path: polygon(-4em -1em, 4em -1em, 4em 1em, -4em 1em); }
+      }
+      .ph2 {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -4em);
+        width: 11em;
+        height: 7em;
+        perspective: 150px;
+        perspective-origin: 50% 0%;
+        transform-style: preserve-3d;
+        animation: ph2 3s ease-in-out infinite;
+      }
+      @keyframes ph2 {
+        0%, 15% { translate: 0 4em; }
+        0%, 29% { opacity: 0; }
+        30% { opacity: 1; }
+        40% { translate: 0 0; }
+        50% { translate: 0 0.5em; opacity: 1; }
+        50.1%, to { opacity: 0; }
+      }
+      .laptop-b {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 0.5em;
+        background: var(--c);
+        border-bottom-left-radius: 2em;
+        border-bottom-right-radius: 2em;
+        animation: ph2b 3s ease infinite;
+      }
+      .laptop-t {
+        margin: 0 1.25em;
+        color: var(--c);
+        transform-origin: 50% 100%;
+        animation: ph2t 3s ease infinite;
+      }
+      @keyframes ph2t {
+        0%, 29% { transform: rotateX(-10deg); }
+        0%, 41.9% { stroke-dasharray: unset; }
+        42% { transform: rotateX(4deg); stroke-dasharray: 0 0 100; }
+        50% { transform: rotateX(-20deg); stroke-dasharray: 0 50 0 100; }
+      }
+      @keyframes ph2b {
+        42% { scale: 1 1; }
+        50% { scale: 0 1; }
+      }
+      .icon {
+        position: absolute;
+        width: 4em;
+        height: 4em;
+        background: var(--c);
+        border-radius: 999px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transform-origin: center;
+        animation: icon 3s ease-in-out infinite;
+        isolation: isolate;
+        border-color: var(--c);
+        border-style: solid;
+        z-index: -1;
+      }
+      @keyframes icon {
+        0%, 15% { translate: 0 4.5em; width: 0; height: 0; }
+        0%, 29% { opacity: 0; }
+        30% { opacity: 1; }
+        40% { translate: 0 -0.75em; width: 4em; height: 4em; }
+        50% { translate: 0 0em; opacity: 1; background: var(--c); }
+        50.1% { border-width: 2em; background: black; }
+        65% { width: 4em; height: 4em; transform: translate(-50%, -50%); border-width: 4px; }
+        80%, to { width: 2em; height: 2em; translate: 0 0; transform: translate(-3.5em, -50%); border-width: 1em; background: black; }
+        80.1%, to { background: var(--c); }
+        84.9% { opacity: 1; }
+        85%, to { opacity: 0; }
+      }
+      .icon::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 0.8em solid black;
+        box-sizing: border-box;
+        border-left-color: transparent !important;
+        border-bottom-color: transparent !important;
+        transform: translate(-50%, 2.5em) rotate(-45deg);
+        transform-origin: center;
+        animation: iconb 3s ease-in-out infinite;
+        z-index: -1;
+      }
+      @keyframes iconb {
+        20% { transform: translate(-50%, 2.5em) rotate(-45deg); }
+        50% { transform: translate(-50%, -25%) rotate(-45deg); border-color: black; }
+        65%, to { transform: translateY(0) scale(1) scaleX(1.5) translate(-60%, -50%) rotate(45deg); border-color: var(--c); }
+        85%, to { transform: translate(-40%, -50%) scale(0) scaleX(1.5) translate(-75%, -50%) rotate(45deg); }
+      }
+      .icon::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background: black;
+        width: 1em;
+        height: 2em;
+        box-sizing: border-box;
+        border-left-color: transparent;
+        border-bottom-color: transparent;
+        animation: icona 3s ease-in-out infinite;
+      }
+      @keyframes icona {
+        20% { transform: translate(-50%, 2.5em); }
+        50% { transform: translate(-50%, 0.4em); }
+        65%, to { transform: translate(-50%, 2.5em); }
+      }
+      .hidden {
+        display: none !important;
+      }
+      /* Размытый гусь на фоне */
+      .goose-bg {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(1.5);
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.18;
+        filter: blur(18px);
+        width: 900px;
+        max-width: 100vw;
+        height: auto;
+      }
+      @media (max-width: 900px) {
+        .goose-bg {
+          width: 100vw;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+      .main-flex, .loader-overlay, #mainContent {
+        position: relative;
+        z-index: 1;
+      }
+      /* Социальная карточка в углу */
+      .social-card-wrapper {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+        z-index: 100;
+      }
+
+      .social-card {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: #23272f;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 7px 29px 0px;
+        transition: all 1s ease-in-out;
+      }
+
+      .social-background {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 100% 107%, #1a237e 0%, #232526 30%, #414345 60%, #232526 100%);
+      }
+
+      .social-logo {
+        position: absolute;
+        right: 50%;
+        bottom: 50%;
+        transform: translate(50%, 50%);
+        transition: all 0.6s ease-in-out;
+      }
+
+      .social-logo .logo-svg {
+        fill: white;
+        width: 30px;
+        height: 30px;
+      }
+
+      .social-icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+      }
+
+      .social-icon .svg {
+        fill: rgba(255, 255, 255, 0.797);
+        width: 100%;
+        transition: all 0.5s ease-in-out;
+      }
+
+      .social-box {
+        position: absolute;
+        padding: 10px;
+        text-align: right;
+        background: rgba(35, 39, 47, 0.8);
+        border-top: 2px solid rgba(255, 255, 255, 0.2);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10% 13% 42% 0%/10% 12% 75% 0%;
+        box-shadow: rgba(0, 0, 0, 0.4) -7px 7px 29px 0px;
+        transform-origin: bottom left;
+        transition: all 1s ease-in-out;
+      }
+
+      .social-box::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        opacity: 0;
+        transition: all 0.5s ease-in-out;
+      }
+
+      .social-box:hover .svg {
+        fill: white;
+      }
+
+      .social-box1 {
+        width: 70%;
+        height: 70%;
+        bottom: -70%;
+        left: -70%;
+      }
+
+      .social-box1::before {
+        background: radial-gradient(circle at 30% 107%, #1a237e 0%, #232526 90%);
+      }
+
+      .social-box1:hover::before {
+        opacity: 1;
+      }
+
+      .social-box1:hover .social-icon .svg {
+        filter: drop-shadow(0 0 5px white);
+      }
+
+      .social-box2 {
+        width: 50%;
+        height: 50%;
+        bottom: -50%;
+        left: -50%;
+        transition-delay: 0.2s;
+      }
+
+      .social-box2::before {
+        background: radial-gradient(circle at 30% 107%, #232526 0%, #1a237e 90%);
+      }
+
+      .social-box2:hover::before {
+        opacity: 1;
+      }
+
+      .social-box2:hover .social-icon .svg {
+        filter: drop-shadow(0 0 5px white);
+      }
+
+      .social-box3 {
+        width: 30%;
+        height: 30%;
+        bottom: -30%;
+        left: -30%;
+        transition-delay: 0.4s;
+      }
+
+      .social-box3::before {
+        background: radial-gradient(circle at 30% 107%, #414345 0%, #232526 90%);
+      }
+
+      .social-box3:hover::before {
+        opacity: 1;
+      }
+
+      .social-box3:hover .social-icon .svg {
+        filter: drop-shadow(0 0 5px white);
+      }
+
+      .social-box4 {
+        width: 10%;
+        height: 10%;
+        bottom: -10%;
+        left: -10%;
+        transition-delay: 0.6s;
+      }
+
+      .social-card:hover {
+        transform: scale(1.1);
+      }
+
+      .social-card:hover .social-box {
+        bottom: -1px;
+        left: -1px;
+      }
+
+      .social-card:hover .social-logo {
+        transform: translate(0, 0);
+        bottom: 20px;
+        right: 20px;
+      }
+
+      @media (max-width: 900px) {
+        .social-card-wrapper {
+          position: static;
+          margin: 20px auto;
+          width: 200px;
+        }
+      }
+      /* SVG гусь как фон */
+      .goose-bg-custom {
+        display: none;
+      }
+      /* Кастомный курсор */
+      body, button, .container, .card, .main-flex {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><g><path d="M8 44 Q10 38 14 38 Q18 38 20 44" fill="orange" stroke="%23d97b00" stroke-width="1.5"/><path d="M32 44 Q34 38 38 38 Q42 38 40 44" fill="orange" stroke="%23d97b00" stroke-width="1.5"/><path d="M8 44 Q8 24 24 24 Q40 24 40 44 Q40 48 8 48 Q8 44 8 44 Z" fill="white" stroke="%23222" stroke-width="2"/><path d="M24 24 Q28 10 40 12 Q44 14 44 20 Q44 24 40 24 Q36 24 32 24 Q28 24 24 24 Z" fill="white" stroke="%23222" stroke-width="2"/><ellipse cx="44" cy="18" rx="3" ry="2" fill="orange" stroke="%23d97b00" stroke-width="1.5"/><ellipse cx="42.5" cy="16.5" rx="0.8" ry="0.8" fill="black"/><path d="M47 18 Q46 19 44 18 Q46 17 47 18 Z" fill="orange"/></g></svg>') 10 10, auto;
+      }
+      /* Дождик из гусей */
+      .goose-rain {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 2;
+      }
+    </style>
+</head>
+<body>
+    <!-- SVG гусь Untitled Goose Game style -->
+    <svg class="goose-bg-custom" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+      <!-- Тело -->
+      <ellipse cx="120" cy="120" rx="60" ry="35" fill="white" stroke="#222" stroke-width="4"/>
+      <!-- Шея -->
+      <path d="M140,120 Q180,80 220,60 Q250,50 260,70 Q265,80 250,85 Q230,90 200,100 Q170,110 150,130" fill="none" stroke="white" stroke-width="18" stroke-linecap="round"/>
+      <path d="M140,120 Q180,80 220,60 Q250,50 260,70 Q265,80 250,85 Q230,90 200,100 Q170,110 150,130" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+      <!-- Голова -->
+      <ellipse cx="260" cy="70" rx="18" ry="14" fill="white" stroke="#222" stroke-width="4"/>
+      <!-- Клюв (открытый) -->
+      <polygon points="278,72 295,75 278,80" fill="orange" stroke="#d97b00" stroke-width="2"/>
+      <polygon points="278,72 295,68 278,68" fill="orange" stroke="#d97b00" stroke-width="2"/>
+      <!-- Глаз -->
+      <ellipse cx="270" cy="68" rx="2.5" ry="2.5" fill="#111"/>
+      <!-- Лапы -->
+      <polygon points="100,155 110,175 120,155" fill="orange" stroke="#d97b00" stroke-width="3"/>
+      <polygon points="140,155 150,175 160,155" fill="orange" stroke="#d97b00" stroke-width="3"/>
+    </svg>
+    <div class="loader-overlay" id="loaderOverlay">
+      <div class="loader">
+        <div class="ph1">
+          <div class="record"></div>
+          <div class="record-text">REC</div>
+        </div>
+        <div class="ph2">
+          <div class="laptop-b"></div>
+          <svg
+            class="laptop-t"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 42 30"
+          >
+            <path
+              d="M21 1H5C2.78 1 1 2.78 1 5V25a4 4 90 004 4H37a4 4 90 004-4V5c0-2.22-1.8-4-4-4H21"
+              pathLength="100"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+            ></path>
+          </svg>
+        </div>
+        <div class="icon"></div>
+      </div>
+    </div>
+    <div id="mainContent" class="hidden">
+      <div class="main-flex">
+        <div class="container">
+          <h1>ПОЗДРАВЛЯЮ Ты кириешка!</h1>
+          <p class="text">Вот тебе пара ссылок на твои любимые сайты</p>
+          <div class="buttons">
+            <button onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')">
+              <svg viewBox="0 0 16 16" class="bi bi-instagram" fill="currentColor" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+              </svg>
+              <span>Ютубчик</span>
+            </button>
+            <!-- Добавляй новые кнопки ниже по аналогии -->
+          </div>
+        <div class="card-fixed-wrapper">
+          <div class="card">
+            <span></span>
+            <div class="content">Спасибки за приход : )</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <audio id="quack-audio" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae1e2.mp3"></audio>
+    <div class="goose-rain" id="gooseRain"></div>
+    <script>
+      // Показываем лоадер 4 секунды, затем скрываем и показываем основной контент
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          document.getElementById('loaderOverlay').classList.add('hide');
+          setTimeout(function() {
+            document.getElementById('loaderOverlay').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('hidden');
+          }, 500); // дождаться анимации скрытия
+        }, 4000);
+
+        // Звук кряка на все кнопки
+        const quack = document.getElementById('quack-audio');
+        document.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', () => {
+            quack.currentTime = 0;
+            quack.play();
+          });
+        });
+      });
+
+      // Дождик из гусей
+      const gooseSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g><path d='M8 44 Q10 38 14 38 Q18 38 20 44' fill='orange' stroke='#d97b00' stroke-width='1.5'/><path d='M32 44 Q34 38 38 38 Q42 38 40 44' fill='orange' stroke='#d97b00' stroke-width='1.5'/><path d='M8 44 Q8 24 24 24 Q40 24 40 44 Q40 48 8 48 Q8 44 8 44 Z' fill='white' stroke='#222' stroke-width='2'/><path d='M24 24 Q28 10 40 12 Q44 14 44 20 Q44 24 40 24 Q36 24 32 24 Q28 24 24 24 Z' fill='white' stroke='#222' stroke-width='2'/><ellipse cx='44' cy='18' rx='3' ry='2' fill='orange' stroke='#d97b00' stroke-width='1.5'/><ellipse cx='42.5' cy='16.5' rx='0.8' ry='0.8' fill='black'/><path d='M47 18 Q46 19 44 18 Q46 17 47 18 Z' fill='orange'/></g></svg>`;
+      function spawnGooseRain() {
+        const rain = document.getElementById('gooseRain');
+        rain.innerHTML = '';
+        const count = Math.floor(window.innerWidth / 60);
+        for (let i = 0; i < count; i++) {
+          const div = document.createElement('div');
+          div.style.position = 'absolute';
+          div.style.left = `${Math.random() * 100}%`;
+          div.style.top = `${-Math.random() * 100}px`;
+          div.style.width = '48px';
+          div.style.height = '48px';
+          div.style.opacity = 0.7 + Math.random() * 0.3;
+          div.style.transform = `rotate(${Math.random() * 360}deg)`;
+          div.innerHTML = gooseSVG;
+          rain.appendChild(div);
+          animateGoose(div, i);
+        }
+      }
+      function animateGoose(div, idx) {
+        const duration = 4 + Math.random() * 3;
+        const delay = Math.random() * 2;
+        const start = Date.now() + delay * 1000;
+        function frame() {
+          const now = Date.now();
+          const t = Math.max(0, (now - start) / (duration * 1000));
+          if (t < 1) {
+            div.style.top = `${t * (window.innerHeight + 60) - 48}px`;
+            div.style.transform = `rotate(${(t * 360 + idx * 30) % 360}deg)`;
+            requestAnimationFrame(frame);
+          } else {
+            div.style.top = `${-Math.random() * 100}px`;
+            div.style.left = `${Math.random() * 100}%`;
+            div.style.transform = `rotate(${Math.random() * 360}deg)`;
+            setTimeout(() => animateGoose(div, idx), Math.random() * 1000);
+          }
+        }
+        setTimeout(frame, delay * 1000);
+      }
+      window.addEventListener('DOMContentLoaded', () => {
+        spawnGooseRain();
+        window.addEventListener('resize', spawnGooseRain);
+      });
+    </script>
+</body>
+</html>
